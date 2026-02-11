@@ -12,4 +12,4 @@
 - Font Awesome
 
 ## Доступ
-Сайт доступен по адресу: https://[ваш-логин].github.io/ife-dashboard/
+Сайт доступен по адресу: https://virglaff-sys.github.io/ife-dashboard/
