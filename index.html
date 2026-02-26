@@ -1,1398 +1,1077 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <link rel="shortcut icon" type="image/png" href="/favicon.png">
-    <title>Стратегический отчёт IFE | Портрет продукта</title>
-
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="viewport" content="width=device-width,maximum-scale=1,initial-scale=1,user-scalable=no,viewport-fit=cover">
-    <meta name="description" content="Портрет продукта IFE: базовые функции, комплектование борта и система отчетности">
-    
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    <title>IFE Roadmap | Редактор задач</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <!-- SortableJS -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <style>
-        /* Деловая чёрно-белая стилистика */
-        :root {
-            --color-primary: #000000;
-            --color-secondary: #333333;
-            --color-accent: #1a1a1a;
-            --color-border: #e0e0e0;
-            --color-background: #ffffff;
-            --color-surface: #f9f9f9;
-            --color-text: #000000;
-            --color-text-secondary: #666666;
-            --color-success: #2E7D32;
-            --color-warning: #FF6D00;
-            --color-danger: #C62828;
-            --color-info: #1565C0;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Helvetica Neue', Arial, sans-serif;
-            line-height: 1.6;
-            color: var(--color-text);
-            background-color: var(--color-background);
-            font-weight: 300;
-            letter-spacing: -0.01em;
+            background: #fff; color: #000; font-weight: 300; line-height: 1.5;
         }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 30px;
-        }
-        
-        /* Шапка в деловом стиле */
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 30px; }
         .header {
-            background: var(--color-background);
-            border-bottom: 1px solid var(--color-border);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            padding: 15px 0;
+            border-bottom: 1px solid #e0e0e0; padding: 15px 0;
+            position: sticky; top: 0; background: #fff; z-index: 1000;
         }
-        
-        .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            color: var(--color-primary);
-        }
-        
-        .logo-icon {
-            font-size: 1.8rem;
-        }
-        
-        .logo-text {
-            font-size: 1.4rem;
-            font-weight: 300;
-            letter-spacing: -0.02em;
-        }
-        
-        .logo-subtext {
-            font-size: 0.7rem;
-            color: var(--color-text-secondary);
-            margin-top: 2px;
-            font-weight: 300;
-        }
-        
-        /* Навигация в минималистичном стиле */
+        .header-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: #000; }
+        .logo-text { font-size: 1.4rem; }
         .nav {
             display: flex;
-            gap: 2px;
-        }
-        
-        .nav a {
-            text-decoration: none;
-            color: var(--color-text);
-            font-weight: 300;
-            padding: 10px 20px;
-            border: 1px solid transparent;
-            transition: all 0.2s;
-            font-size: 0.9rem;
-        }
-        
-        .nav a:hover, .nav a.active {
-            border: 1px solid var(--color-border);
-            background: var(--color-surface);
-        }
-        
-        /* Основной контент */
-        .main-content {
-            padding: 40px 0 80px;
-        }
-        
-        /* Герой-секция в строгом стиле */
-        .hero {
-            background: var(--color-surface);
-            padding: 80px 0;
-            margin-bottom: 60px;
-            border-bottom: 1px solid var(--color-border);
-        }
-        
-        .hero-title {
-            font-size: 2.8rem;
-            font-weight: 300;
-            margin-bottom: 20px;
-            line-height: 1.2;
-        }
-        
-        .hero-title strong {
-            font-weight: 400;
-        }
-        
-        .hero-subtitle {
-            font-size: 1.1rem;
-            color: var(--color-text-secondary);
-            max-width: 800px;
-            margin-bottom: 40px;
-            font-weight: 300;
-        }
-        
-        /* Карточки метрик */
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 40px 0;
-        }
-        
-        .kpi-card {
-            background: var(--color-background);
-            border: 1px solid var(--color-border);
-            padding: 30px;
-            text-align: center;
-            transition: transform 0.2s;
-        }
-        
-        .kpi-card:hover {
-            transform: translateY(-2px);
-        }
-        
-        .kpi-value {
-            font-size: 2.8rem;
-            font-weight: 300;
-            margin-bottom: 10px;
-            color: var(--color-primary);
-            font-feature-settings: "tnum";
-        }
-        
-        .kpi-label {
-            color: var(--color-text-secondary);
-            font-size: 0.9rem;
-            font-weight: 300;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        
-        /* Секции */
-        .section {
-            margin-bottom: 80px;
-        }
-        
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--color-border);
-        }
-        
-        .section-title {
-            font-size: 1.8rem;
-            font-weight: 300;
-            color: var(--color-primary);
-        }
-        
-        .section-subtitle {
-            font-size: 0.9rem;
-            color: var(--color-text-secondary);
-            font-weight: 300;
-        }
-        
-        /* Диаграммы */
-        .chart-container {
-            background: var(--color-background);
-            border: 1px solid var(--color-border);
-            padding: 30px;
-            margin: 30px 0;
-        }
-        
-        .chart-title {
-            font-size: 1.1rem;
-            color: var(--color-primary);
-            margin-bottom: 25px;
-            text-align: center;
-            font-weight: 300;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        
-        /* Таблицы */
-        .table-responsive {
-            overflow-x: auto;
-            margin: 30px 0;
-            border: 1px solid var(--color-border);
-        }
-        
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-weight: 300;
-        }
-        
-        .data-table th {
-            background: var(--color-surface);
-            color: var(--color-text);
-            padding: 20px;
-            text-align: left;
-            font-weight: 400;
-            border-bottom: 1px solid var(--color-border);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        
-        .data-table td {
-            padding: 18px 20px;
-            border-bottom: 1px solid var(--color-border);
-            color: var(--color-text-secondary);
-        }
-        
-        .data-table tr:last-child td {
-            border-bottom: none;
-        }
-        
-        .data-table tr:hover {
-            background: var(--color-surface);
-        }
-        
-        /* Матрица функций */
-        .matrix-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-        
-        .matrix-item {
-            border: 1px solid var(--color-border);
-            padding: 25px;
-        }
-        
-        .matrix-header {
-            font-weight: 400;
-            margin-bottom: 20px;
-            color: var(--color-primary);
-            font-size: 1.1rem;
-            display: flex;
             align-items: center;
             gap: 10px;
         }
-        
-        .matrix-list {
-            list-style: none;
+        .nav a, .nav button {
+            text-decoration: none; color: #000; padding: 10px 20px; border: 1px solid transparent;
+            font-size: 0.9rem; background: none; cursor: pointer;
+            border-radius: 4px;
         }
-        
-        .matrix-list li {
-            padding: 8px 0;
-            border-bottom: 1px solid var(--color-border);
+        .nav a:hover, .nav a.active, .nav button:hover { border-color: #e0e0e0; background: #f9f9f9; }
+        .nav button { font-family: inherit; }
+
+        /* Зелёная кнопка Сохранить */
+        .save-btn {
+            background-color: #28a745 !important;
+            color: white !important;
+            border: 1px solid #28a745 !important;
+        }
+        .save-btn:hover {
+            background-color: #218838 !important;
+            border-color: #1e7e34 !important;
+        }
+
+        /* Секции */
+        .aircraft-section { margin-bottom: 70px; scroll-margin-top: 80px; }
+        .section-header {
+            display: flex; align-items: baseline; gap: 20px;
+            border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px;
+        }
+        .section-title { font-size: 2rem; font-weight: 300; }
+
+        /* Подгруппа (тип ВС) */
+        .subgroup { margin-bottom: 50px; }
+        .subgroup-header {
+            font-size: 1.5rem; font-weight: 300; padding: 10px 0 10px 10px;
+            border-left: 4px solid #000; margin: 30px 0 20px;
+            cursor: pointer; user-select: none; display: flex; align-items: center; gap: 10px;
+        }
+        .subgroup-header i { transition: transform 0.2s; }
+        .subgroup.collapsed .subgroup-header i { transform: rotate(-90deg); }
+        .subgroup-content { overflow: hidden; transition: max-height 0.3s; }
+        .subgroup.collapsed .subgroup-content { display: none; }
+
+        /* Колонки */
+        .task-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+
+        .task-block {
+            border: 1px solid #e0e0e0;
+        }
+        .task-block.contract { border-top: 4px solid #1e3a5f; }
+        .task-block.new { border-top: 4px solid #b85e00; background-color: #fff8e7; }
+
+        .column-header {
+            padding: 15px 20px; cursor: pointer; display: flex; justify-content: space-between;
+            align-items: center; border-bottom: 1px solid #e0e0e0; user-select: none;
+        }
+        .column-header-left {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 8px;
         }
-        
-        .matrix-list li:last-child {
-            border-bottom: none;
-        }
-        
-        .matrix-status {
-            font-size: 0.8rem;
-            padding: 2px 8px;
-            border: 1px solid;
-            border-radius: 2px;
-        }
-        
-        .status-success { 
-            color: var(--color-success);
-            border-color: var(--color-success);
-            background: rgba(46, 125, 50, 0.05);
-        }
-        
-        .status-warning { 
-            color: var(--color-warning);
-            border-color: var(--color-warning);
-            background: rgba(255, 109, 0, 0.05);
-        }
-        
-        .status-danger { 
-            color: var(--color-danger);
-            border-color: var(--color-danger);
-            background: rgba(198, 40, 40, 0.05);
-        }
-        
-        .status-info { 
-            color: var(--color-info);
-            border-color: var(--color-info);
-            background: rgba(21, 101, 192, 0.05);
-        }
-        
-        /* Карточки сравнения */
-        .comparison-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 30px 0;
-        }
-        
-        .comparison-card {
-            border: 1px solid var(--color-border);
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .comparison-icon {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: var(--color-text-secondary);
-        }
-        
-        .comparison-title {
-            font-weight: 400;
-            margin-bottom: 10px;
-            font-size: 0.95rem;
-        }
-        
-        .comparison-value {
-            font-size: 1.1rem;
-            font-weight: 400;
-            margin-bottom: 5px;
-        }
-        
-        .comparison-desc {
-            font-size: 0.85rem;
-            color: var(--color-text-secondary);
-            font-weight: 300;
-        }
-        
-        /* Списки */
-        .list {
-            margin: 30px 0;
-        }
-        
-        .list-item {
-            display: flex;
-            padding: 20px;
-            border-bottom: 1px solid var(--color-border);
-            align-items: center;
-        }
-        
-        .list-item:last-child {
-            border-bottom: none;
-        }
-        
-        .list-number {
+        .column-header-left h3 {
             font-size: 1.2rem;
-            font-weight: 300;
-            color: var(--color-text-secondary);
-            min-width: 40px;
-        }
-        
-        .list-content {
-            flex: 1;
-        }
-        
-        .list-title {
-            font-weight: 400;
-            margin-bottom: 5px;
-            font-size: 1rem;
-        }
-        
-        .list-description {
-            font-size: 0.9rem;
-            color: var(--color-text-secondary);
-            font-weight: 300;
-        }
-        
-        /* Футер */
-        .footer {
-            background: var(--color-surface);
-            border-top: 1px solid var(--color-border);
-            padding: 60px 0 30px;
-        }
-        
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-        
-        .footer-section-title {
-            font-size: 0.9rem;
-            margin-bottom: 20px;
-            color: var(--color-text);
-            font-weight: 400;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        
-        .footer-links {
             display: flex;
-            flex-direction: column;
-            gap: 12px;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
         }
-        
-        .footer-link {
-            color: var(--color-text-secondary);
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 300;
+        .column-header i { transition: transform 0.2s; }
+        .task-block.active .column-header i.chevron { transform: rotate(90deg); }
+        .column-content { padding: 20px; display: none; }
+        .task-block.active .column-content { display: block; }
+
+        /* Аккордеоны внутри колонок */
+        .accordion-item {
+            margin-bottom: 12px;
+            margin-top: 20px; /* отступ между группами */
+        }
+        .accordion-header {
+            background: #f2f2f2; padding: 10px 15px; cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center;
+            border: 1px solid #e0e0e0; user-select: none;
+        }
+        .accordion-header-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .accordion-header-left span {
+            font-weight: 500;
+        }
+        .accordion-header i { transition: transform 0.2s; }
+        .accordion-content {
+            padding: 15px 20px; border: 1px solid #e0e0e0; border-top: none;
+            background: #fff; display: none;
+        }
+        .accordion-item.active .accordion-content { display: block; }
+        .accordion-item.active .accordion-header i.chevron { transform: rotate(90deg); }
+
+        /* Кнопки действий над заголовками */
+        .edit-icon, .delete-icon, .add-section-icon {
+            color: #999;
+            cursor: pointer;
+            font-size: 0.9rem;
             transition: color 0.2s;
         }
-        
-        .footer-link:hover {
-            color: var(--color-text);
+        .edit-icon:hover { color: #007bff; }
+        .delete-icon:hover { color: #c00; }
+        .add-section-icon:hover { color: #28a745; }
+
+        /* Списки задач */
+        .task-list {
+            list-style: none;
+            min-height: 30px;
+            margin-top: 10px;
         }
-        
-        .copyright {
-            text-align: center;
-            padding-top: 30px;
-            border-top: 1px solid var(--color-border);
-            color: var(--color-text-secondary);
-            font-size: 0.8rem;
-            font-weight: 300;
-        }
-        
-        /* Кнопки */
-        .btn {
-            display: inline-flex;
+        .task-list li {
+            padding: 8px 10px 8px 8px;
+            border-bottom: 1px dashed #e0e0e0;
+            display: flex;
             align-items: center;
-            gap: 10px;
-            background: var(--color-background);
-            color: var(--color-text);
-            padding: 12px 24px;
-            border: 1px solid var(--color-border);
-            text-decoration: none;
-            font-weight: 300;
-            font-size: 0.9rem;
-            transition: all 0.2s;
+            gap: 8px;
+            font-size: 0.95rem;
+            background: #fff;
+            cursor: grab;
+            flex-wrap: wrap;
+        }
+        .task-list li:last-child { border-bottom: none; }
+        .task-list li i:first-child { width: 20px; }
+        .fa-file-signature { color: #1e3a5f; }
+        .fa-bolt { color: #b85e00; }
+
+        /* Контейнер для иконок действий, чтобы прижать их вправо */
+        .task-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Кнопки действий (галочка, минус, корзина) */
+        .mark-hight, .mark-low, .delete-task {
+            color: #999;
             cursor: pointer;
+            font-size: 0.9rem;
+            transition: color 0.2s;
         }
-        
-        .btn:hover {
-            background: var(--color-surface);
-            border-color: var(--color-text-secondary);
+        .mark-hight:hover { color: #28a745; }
+        .mark-low:hover { color: #dc3545; }
+        .delete-task:hover { color: #c00; }
+
+        /* Метки hight и low */
+        .hight-label, .low-label {
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 12px;
+            margin-left: 8px;
+            text-transform: uppercase;
+            display: inline-block;
+            color: white;
         }
-        
-        .btn-primary {
-            background: var(--color-primary);
-            color: var(--color-background);
-            border-color: var(--color-primary);
+        .hight-label {
+            background-color: #28a745;
         }
-        
-        .btn-primary:hover {
-            background: var(--color-secondary);
+        .low-label {
+            background-color: #dc3545;
         }
-        
-        /* Утилиты */
-        .text-center { text-align: center; }
-        .text-right { text-align: right; }
-        .text-muted { color: var(--color-text-secondary); }
-        .mb-20 { margin-bottom: 20px; }
-        .mb-30 { margin-bottom: 30px; }
-        .mb-40 { margin-bottom: 40px; }
-        
-        /* Адаптивность */
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 20px;
-            }
-            
-            .nav {
-                display: none;
-            }
-            
-            .mobile-menu-btn {
-                display: block;
-                background: none;
-                border: none;
-                font-size: 1.5rem;
-                color: var(--color-primary);
-                cursor: pointer;
-            }
-            
-            .hero-title {
-                font-size: 2rem;
-            }
-            
-            .kpi-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .section-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-            
-            .matrix-grid {
-                grid-template-columns: 1fr;
-            }
+
+        /* Форма добавления новой задачи (теперь сверху) */
+        .add-task-form {
+            display: flex;
+            margin-bottom: 12px;
+            gap: 6px;
         }
-        
-        @media (min-width: 769px) {
-            .mobile-menu-btn {
-                display: none;
-            }
+        .add-task-form input {
+            flex: 1;
+            padding: 8px 10px;
+            border: 1px solid #e0e0e0;
+            font-size: 0.9rem;
+            border-radius: 4px;
         }
+        .add-task-form button {
+            background: #f0f0f0;
+            border: 1px solid #e0e0e0;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            border-radius: 4px;
+        }
+        .add-task-form button:hover {
+            background: #e0e0e0;
+        }
+
+        .footer {
+            background: #f9f9f9; border-top: 1px solid #e0e0e0;
+            padding: 40px 0 20px; margin-top: 60px;
+        }
+        .copyright { text-align: center; color: #666; font-size: 0.8rem; }
+        .reset-btn {
+            background: none; border: 1px solid #ccc; padding: 5px 12px;
+            cursor: pointer; font-size: 0.8rem; border-radius: 4px;
+            margin-left: 5px;
+        }
+        .reset-btn:hover { background: #f0f0f0; }
+        @media (max-width: 900px) { .task-columns { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
-    <!-- Шапка -->
-    <header class="header">
-        <div class="container header-container">
-            <a href="#" class="logo">
-                <i class="fas fa-chart-line logo-icon"></i>
-                <div>
-                    <div class="logo-text">IFE ANALYTICS</div>
-                    <div class="logo-subtext">Портрет продукта</div>
-                </div>
-            </a>
-            
-            <nav class="nav">
-                <a href="#overview" class="active">Обзор</a>
-                <a href="#basic">Базовые функции</a>
-                <a href="#equipment">Комплектование</a>
-                <a href="#reporting">Отчётность</a>
-                <a href="#summary">Резюме</a>
-            </nav>
-            
-            <button class="mobile-menu-btn" id="mobileMenuBtn">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
-    </header>
+<header class="header">
+    <div class="container header-container">
+        <a href="#" class="logo"><i class="fas fa-tasks"></i><span class="logo-text">IFE ROADMAP</span></a>
+        <nav class="nav">
+            <a href="#uf">Узкий фюзеляж</a>
+            <a href="#shf">Широкий фюзеляж</a>
+            <a href="#tablet">Tablet</a>
+            <button class="save-btn" id="saveBtn"><i class="fas fa-save"></i> Сохранить</button>
+            <button class="reset-btn" id="resetBtn"><i class="fas fa-undo"></i> Сбросить</button>
+        </nav>
+    </div>
+</header>
+<main class="container" id="app"></main>
+<footer class="footer"><div class="container"><div class="copyright">© 2026 IFE Roadmap. Редактор с сохранением в localStorage и экспортом HTML.</div></div></footer>
 
-    <!-- Основной контент -->
-    <main class="main-content">
-        <!-- Герой-секция -->
-        <section class="hero">
-            <div class="container">
-                <h1 class="hero-title">
-                    Портрет продукта:<br>
-                    <strong>Бортовые развлекательные системы IFE</strong>
-                </h1>
-                
-                <p class="hero-subtitle">
-                    Полное описание продукта IFE: базовые функции, комплектование борта и система отчётности.
-                    Анализ выполнения по типам воздушных судов. Состояние на 27 января 2026 года.
-                </p>
-                
-                <div class="kpi-grid">
-                    <div class="kpi-card">
-                        <div class="kpi-value">46</div>
-                        <div class="kpi-label">Базовых функций</div>
-                    </div>
-                    
-                    <div class="kpi-card">
-                        <div class="kpi-value">5</div>
-                        <div class="kpi-label">Типов ВС</div>
-                    </div>
-                    
-                    <div class="kpi-card">
-                        <div class="kpi-value">7</div>
-                        <div class="kpi-label">Модулей комплектования</div>
-                    </div>
-                    
-                    <div class="kpi-card">
-                        <div class="kpi-value">12</div>
-                        <div class="kpi-label">Видов отчётности</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Базовые функции -->
-        <section id="basic" class="container section">
-            <div class="section-header">
-                <h2 class="section-title">Базовые функции продукта</h2>
-                <div class="section-subtitle">Функции, выполненные на всех типах воздушных судов</div>
-            </div>
-            
-            <div class="matrix-grid">
-                <div class="matrix-item">
-                    <div class="matrix-header">
-                        <i class="fas fa-tv"></i>
-                        <span>Базовый портал</span>
-                    </div>
-                    <ul class="matrix-list">
-                        <li>
-                            <span>Captive portal</span>
-                            <span class="matrix-status status-success">Все ВС</span>
-                        </li>
-                        <li>
-                            <span>Главная страница</span>
-                            <span class="matrix-status status-success">Все ВС</span>
-                        </li>
-                        <li>
-                            <span>Фильмы, музыка, развлечения</span>
-                            <span class="matrix-status status-success">Все ВС</span>
-                        </li>
-                        <li>
-                            <span>Контент (плеер)</span>
-                            <span class="matrix-status status-success">Все ВС</span>
-                        </li>
-                        <li>
-                            <span>Меню навигации</span>
-                            <span class="matrix-status status-success">Все ВС</span>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div class="matrix-item">
-                    <div class="matrix-header">
-                        <i class="fas fa-cogs"></i>
-                        <span>Технические функции</span>
-                    </div>
-                    <ul class="matrix-list">
-                        <li>
-                            <span>Кастомизация дизайна</span>
-                            <span class="matrix-status status-success">Все ВС</span>
-                        </li>
-                        <li>
-                            <span>9 языков интерфейса</span>
-                            <span class="matrix-status status-success">Все ВС</span>
-                        </li>
-                        <li>
-                            <span>HD видео с DRM</span>
-                            <span class="matrix-status status-success">Все ВС</span>
-                        </li>
-                        <li>
-                            <span>Интеграция с CrewTablet</span>
-                            <span class="matrix-status status-success">Все ВС</span>
-                        </li>
-                        <li>
-                            <span>Вызов бортпроводника</span>
-                            <span class="matrix-status status-success">Все ВС</span>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div class="matrix-item">
-                    <div class="matrix-header">
-                        <i class="fas fa-users"></i>
-                        <span>Пользовательские функции</span>
-                    </div>
-                    <ul class="matrix-list">
-                        <li>
-                            <span>Избранное</span>
-                            <span class="matrix-status status-success">Все ВС</span>
-                        </li>
-                        <li>
-                            <span>Информация о полёте</span>
-                            <span class="matrix-status status-success">Все ВС</span>
-                        </li>
-                        <li>
-                            <span>Об авиакомпании</span>
-                            <span class="matrix-status status-success">Все ВС</span>
-                        </li>
-                        <li>
-                            <span>Выбор языка озвучки</span>
-                            <span class="matrix-status status-success">Все ВС</span>
-                        </li>
-                        <li>
-                            <span>Отображение на устройствах</span>
-                            <span class="matrix-status status-success">Все ВС</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            
-            <!-- Диаграмма охвата базовых функций -->
-            <div class="chart-container">
-                <h3 class="chart-title">Охват базовых функций по типам ВС</h3>
-                <canvas id="basicFunctionsChart" height="250"></canvas>
-            </div>
-        </section>
-
-        <!-- Комплектование борта -->
-        <section id="equipment" class="container section">
-            <div class="section-header">
-                <h2 class="section-title">Комплектование борта</h2>
-                <div class="section-subtitle">Модули и их доступность по типам воздушных судов</div>
-            </div>
-            
-            <div class="table-responsive">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Модуль</th>
-                            <th>A320 CEO</th>
-                            <th>A320 NEO</th>
-                            <th>B737</th>
-                            <th>A350</th>
-                            <th>B777</th>
-                            <th>Статус</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Свежая пресса</strong></td>
-                            <td class="text-center"><i class="fas fa-check" style="color: var(--color-success);"></i></td>
-                            <td class="text-center"><i class="fas fa-exclamation" style="color: var(--color-warning);"></i></td>
-                            <td class="text-center"><i class="fas fa-exclamation" style="color: var(--color-warning);"></i></td>
-                            <td class="text-center"><i class="fas fa-exclamation" style="color: var(--color-warning);"></i></td>
-                            <td class="text-center"><i class="fas fa-exclamation" style="color: var(--color-warning);"></i></td>
-                            <td><span class="matrix-status status-warning">Требуется модем</span></td>
-                        </tr>
-                        
-                        <tr>
-                            <td><strong>Опросы пассажиров</strong></td>
-                            <td class="text-center"><i class="fas fa-check" style="color: var(--color-success);"></i></td>
-                            <td class="text-center"><i class="fas fa-exclamation" style="color: var(--color-warning);"></i></td>
-                            <td class="text-center"><i class="fas fa-exclamation" style="color: var(--color-warning);"></i></td>
-                            <td class="text-center"><i class="fas fa-exclamation" style="color: var(--color-warning);"></i></td>
-                            <td class="text-center"><i class="fas fa-exclamation" style="color: var(--color-warning);"></i></td>
-                            <td><span class="matrix-status status-warning">Требуется модем</span></td>
-                        </tr>
-                        
-                        <tr>
-                            <td><strong>Бортовое меню</strong></td>
-                            <td class="text-center"><i class="fas fa-check" style="color: var(--color-success);"></i></td>
-                            <td class="text-center"><i class="fas fa-check" style="color: var(--color-success);"></i></td>
-                            <td class="text-center"><i class="fas fa-check" style="color: var(--color-success);"></i></td>
-                            <td class="text-center"><i class="fas fa-check" style="color: var(--color-success);"></i></td>
-                            <td class="text-center"><i class="fas fa-check" style="color: var(--color-success);"></i></td>
-                            <td><span class="matrix-status status-info">Просмотр без заказа</span></td>
-                        </tr>
-                        
-                        <tr>
-                            <td><strong>Магазин на борту</strong></td>
-                            <td class="text-center"><i class="fas fa-check" style="color: var(--color-success);"></i></td>
-                            <td class="text-center"><i class="fas fa-check" style="color: var(--color-success);"></i></td>
-                            <td class="text-center"><i class="fas fa-times" style="color: var(--color-danger);"></i></td>
-                            <td class="text-center"><i class="fas fa-check" style="color: var(--color-success);"></i></td>
-                            <td class="text-center"><i class="fas fa-check" style="color: var(--color-success);"></i></td>
-                            <td><span class="matrix-status status-danger">Ограничения вендора B737</span></td>
-                        </tr>
-                        
-                        <tr>
-                            <td><strong>Пассажиры (регистрация)</strong></td>
-                            <td class="text-center"><i class="fas fa-check" style="color: var(--color-success);"></i></td>
-                            <td class="text-center"><i class="fas fa-exclamation" style="color: var(--color-warning);"></i></td>
-                            <td class="text-center"><i class="fas fa-exclamation" style="color: var(--color-warning);"></i></td>
-                            <td class="text-center"><i class="fas fa-exclamation" style="color: var(--color-warning);"></i></td>
-                            <td class="text-center"><i class="fas fa-exclamation" style="color: var(--color-warning);"></i></td>
-                            <td><span class="matrix-status status-warning">Требуется модем</span></td>
-                        </tr>
-                        
-                        <tr>
-                            <td><strong>Члены экипажа</strong></td>
-                            <td class="text-center"><i class="fas fa-check" style="color: var(--color-success);"></i></td>
-                            <td class="text-center"><i class="fas fa-check" style="color: var(--color-success);"></i></td>
-                            <td class="text-center"><i class="fas fa-check" style="color: var(--color-success);"></i></td>
-                            <td class="text-center"><i class="fas fa-check" style="color: var(--color-success);"></i></td>
-                            <td class="text-center"><i class="fas fa-check" style="color: var(--color-success);"></i></td>
-                            <td><span class="matrix-status status-success">Полная интеграция</span></td>
-                        </tr>
-                        
-                        <tr>
-                            <td><strong>Реклама</strong></td>
-                            <td class="text-center"><i class="fas fa-check" style="color: var(--color-success);"></i></td>
-                            <td class="text-center"><i class="fas fa-check" style="color: var(--color-success);"></i></td>
-                            <td class="text-center"><i class="fas fa-check" style="color: var(--color-success);"></i></td>
-                            <td class="text-center"><i class="fas fa-check" style="color: var(--color-success);"></i></td>
-                            <td class="text-center"><i class="fas fa-check" style="color: var(--color-success);"></i></td>
-                            <td><span class="matrix-status status-info">Обновление разными способами</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            
-            <!-- Карточки анализа комплектования -->
-            <div class="comparison-cards">
-                <div class="comparison-card">
-                    <i class="fas fa-satellite-dish comparison-icon"></i>
-                    <div class="comparison-title">GSM-модемы</div>
-                    <div class="comparison-value">1 из 5</div>
-                    <div class="comparison-desc">Только A320 CEO</div>
-                </div>
-                
-                <div class="comparison-card">
-                    <i class="fas fa-wifi comparison-icon"></i>
-                    <div class="comparison-title">Wi-Fi сети</div>
-                    <div class="comparison-value">4 из 5</div>
-                    <div class="comparison-desc">Все кроме A320 CEO</div>
-                </div>
-                
-                <div class="comparison-card">
-                    <i class="fas fa-tablet-alt comparison-icon"></i>
-                    <div class="comparison-title">Встройки бизнес-класса</div>
-                    <div class="comparison-value">3 из 5</div>
-                    <div class="comparison-desc">NEO, B737, A350/B777</div>
-                </div>
-                
-                <div class="comparison-card">
-                    <i class="fas fa-exclamation-triangle comparison-icon"></i>
-                    <div class="comparison-title">Зависимости от заказчика</div>
-                    <div class="comparison-value">9 функций</div>
-                    <div class="comparison-desc">Блокируют выполнение</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Система отчетности -->
-        <section id="reporting" class="container section">
-            <div class="section-header">
-                <h2 class="section-title">Система отчётности</h2>
-                <div class="section-subtitle">Отчёты по работе портала и оборудования по типам ВС</div>
-            </div>
-            
-            <div class="matrix-grid">
-                <div class="matrix-item">
-                    <div class="matrix-header">
-                        <i class="fas fa-chart-bar"></i>
-                        <span>Отчётность по работе портала</span>
-                    </div>
-                    <ul class="matrix-list">
-                        <li>
-                            <span>Передача статистики через GSM</span>
-                            <span class="matrix-status status-success">CEO</span>
-                        </li>
-                        <li>
-                            <span>Передача статистики внешним носителем</span>
-                            <span class="matrix-status status-success">NEO, B737</span>
-                        </li>
-                        <li>
-                            <span>Статистика просмотра контента</span>
-                            <span class="matrix-status status-warning">Частично</span>
-                        </li>
-                        <li>
-                            <span>Используемые устройства пассажиров</span>
-                            <span class="matrix-status status-warning">CEO только</span>
-                        </li>
-                        <li>
-                            <span>Данные о транзакциях</span>
-                            <span class="matrix-status status-success">CEO</span>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div class="matrix-item">
-                    <div class="matrix-header">
-                        <i class="fas fa-server"></i>
-                        <span>Отчётность по оборудованию</span>
-                    </div>
-                    <ul class="matrix-list">
-                        <li>
-                            <span>Исторические данные (12 месяцев)</span>
-                            <span class="matrix-status status-danger">Не реализовано</span>
-                        </li>
-                        <li>
-                            <span>Выгрузка данных о работоспособности</span>
-                            <span class="matrix-status status-danger">Не реализовано</span>
-                        </li>
-                        <li>
-                            <span>Мониторинг компонентов системы</span>
-                            <span class="matrix-status status-success">NEO, B737, A350, B777</span>
-                        </li>
-                        <li>
-                            <span>Диагностика состояния системы</span>
-                            <span class="matrix-status status-success">Все ВС</span>
-                        </li>
-                        <li>
-                            <span>Протоколирование событий</span>
-                            <span class="matrix-status status-success">Все ВС</span>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div class="matrix-item">
-                    <div class="matrix-header">
-                        <i class="fas fa-sync-alt"></i>
-                        <span>Обновление и управление</span>
-                    </div>
-                    <ul class="matrix-list">
-                        <li>
-                            <span>Обновление контента через GSM</span>
-                            <span class="matrix-status status-success">CEO</span>
-                        </li>
-                        <li>
-                            <span>Обновление контента внешним загрузчиком</span>
-                            <span class="matrix-status status-success">NEO, B737, A350, B777</span>
-                        </li>
-                        <li>
-                            <span>Обновление рекламы через GSM</span>
-                            <span class="matrix-status status-success">CEO</span>
-                        </li>
-                        <li>
-                            <span>Обновление рекламы внешним загрузчиком</span>
-                            <span class="matrix-status status-success">NEO, B737, A350, B777</span>
-                        </li>
-                        <li>
-                            <span>Обновление ПО силами авиакомпании</span>
-                            <span class="matrix-status status-success">NEO, B737, A350, B777</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            
-            <!-- Список критических недостатков отчетности -->
-            <div class="list">
-                <div class="list-item">
-                    <div class="list-number">01</div>
-                    <div class="list-content">
-                        <div class="list-title">Отсутствие единой системы аналитики</div>
-                        <div class="list-description">
-                            Каждый тип ВС имеет разные механизмы сбора и передачи статистики.
-                            Нет консолидированной отчётности по всем воздушным судам.
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="list-item">
-                    <div class="list-number">02</div>
-                    <div class="list-content">
-                        <div class="list-title">Отсутствие исторических данных</div>
-                        <div class="list-description">
-                            Невозможно проанализировать тренды и производительность системы
-                            за период более 30 дней. Контракт требует хранения 12 месяцев.
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="list-item">
-                    <div class="list-number">03</div>
-                    <div class="list-content">
-                        <div class="list-title">Ручная обработка отчётов</div>
-                        <div class="list-description">
-                            Для ВС NEO и B737 требуется физическое снятие данных
-                            обслуживающим персоналом на внешние носители.
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="list-item">
-                    <div class="list-number">04</div>
-                    <div class="list-content">
-                        <div class="list-title">Разрозненные форматы данных</div>
-                        <div class="list-description">
-                            Каждая система (CEO, NEO, B737, A350, B777) использует
-                            свои форматы и протоколы передачи данных.
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Диаграмма охвата отчетности -->
-            <div class="chart-container">
-                <h3 class="chart-title">Охват системы отчётности по типам ВС</h3>
-                <canvas id="reportingChart" height="250"></canvas>
-            </div>
-        </section>
-
-        <!-- Итоговое резюме -->
-        <section id="summary" class="container section">
-            <div class="section-header">
-                <h2 class="section-title">Резюме портрета продукта</h2>
-                <div class="section-subtitle">Ключевые характеристики и направления развития</div>
-            </div>
-            
-            <div class="kpi-grid" style="margin-top: 0;">
-                <div class="kpi-card">
-                    <div class="kpi-label">Сильные стороны</div>
-                    <div class="kpi-value" style="font-size: 1.2rem; margin-top: 15px;">
-                        Универсальное ядро
-                    </div>
-                    <div class="text-muted" style="margin-top: 10px; font-size: 0.9rem;">
-                        46 базовых функций работают на всех 5 типах ВС
-                    </div>
-                </div>
-                
-                <div class="kpi-card">
-                    <div class="kpi-label">Слабые стороны</div>
-                    <div class="kpi-value" style="font-size: 1.2rem; margin-top: 15px;">
-                        Зависимость от оборудования
-                    </div>
-                    <div class="text-muted" style="margin-top: 10px; font-size: 0.9rem;">
-                        9 функций блокированы отсутствием модемов
-                    </div>
-                </div>
-                
-                <div class="kpi-card">
-                    <div class="kpi-label">Возможности</div>
-                    <div class="kpi-value" style="font-size: 1.2rem; margin-top: 15px;">
-                        Единая аналитика
-                    </div>
-                    <div class="text-muted" style="margin-top: 10px; font-size: 0.9rem;">
-                        Создание консолидированной системы отчётности
-                    </div>
-                </div>
-            </div>
-            
-            <div class="chart-container">
-                <h3 class="chart-title">Общий охват функций по категориям</h3>
-                <canvas id="coverageChart" height="200"></canvas>
-            </div>
-            
-            <!-- Кнопки действий -->
-            <div class="text-center mb-30">
-                <button class="btn btn-primary" onclick="downloadProductPortrait()">
-                    <i class="fas fa-download"></i> Скачать портрет продукта
-                </button>
-                <button class="btn" onclick="requestDetailedReport()" style="margin-left: 15px;">
-                    <i class="fas fa-file-alt"></i> Запросить детальный отчёт
-                </button>
-            </div>
-            
-            <div class="text-center mb-40">
-                <div class="text-muted" style="font-size: 0.9rem;">
-                    Портрет продукта актуален на: 27 января 2026<br>
-                    Следующее обновление: 27 февраля 2026
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Футер -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div>
-                    <div class="footer-section-title">Портрет продукта</div>
-                    <div class="footer-links">
-                        <a href="#basic" class="footer-link">Базовые функции</a>
-                        <a href="#equipment" class="footer-link">Комплектование борта</a>
-                        <a href="#reporting" class="footer-link">Система отчётности</a>
-                        <a href="#summary" class="footer-link">Резюме и рекомендации</a>
-                    </div>
-                </div>
-                
-                <div>
-                    <div class="footer-section-title">Документация</div>
-                    <div class="footer-links">
-                        <a href="#" class="footer-link">Технические спецификации</a>
-                        <a href="#" class="footer-link">Архитектура системы</a>
-                        <a href="#" class="footer-link">API документация</a>
-                        <a href="#" class="footer-link">Руководства пользователя</a>
-                    </div>
-                </div>
-                
-                <div>
-                    <div class="footer-section-title">Контакты</div>
-                    <div class="footer-links">
-                        <a href="#" class="footer-link">Продуктовый владелец</a>
-                        <a href="#" class="footer-link">Техническая архитектура</a>
-                        <a href="#" class="footer-link">Отдел разработки</a>
-                        <a href="#" class="footer-link">Техническая поддержка</a>
-                    </div>
-                </div>
-                
-                <div>
-                    <div class="footer-section-title">Обновления</div>
-                    <div class="footer-links">
-                        <a href="#" class="footer-link">Версии продукта</a>
-                        <a href="#" class="footer-link">Планы развития</a>
-                        <a href="#" class="footer-link">Roadmap 2026-2027</a>
-                        <a href="#" class="footer-link">История изменений</a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="copyright">
-                <div>© 2026 IFE Product Portrait. Все права защищены.</div>
-                <div style="margin-top: 10px;">
-                    <a href="#" class="footer-link" style="font-size: 0.8rem;">Конфиденциальность</a> · 
-                    <a href="#" class="footer-link" style="font-size: 0.8rem;">Условия использования</a> · 
-                    <a href="#" class="footer-link" style="font-size: 0.8rem;">Правовая информация</a>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Скрипты -->
-    <script>
-        // Инициализация диаграмм
-        document.addEventListener('DOMContentLoaded', function() {
-            // Диаграмма охвата базовых функций
-            const basicCtx = document.getElementById('basicFunctionsChart').getContext('2d');
-            new Chart(basicCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['A320 CEO', 'A320 NEO', 'B737', 'A350', 'B777'],
-                    datasets: [
-                        {
-                            label: 'Базовые функции',
-                            data: [46, 40, 40, 44, 44],
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            borderColor: '#000',
-                            borderWidth: 1
-                        },
-                        {
-                            label: 'Функции с техдолгом',
-                            data: [4, 5, 4, 5, 5],
-                            backgroundColor: 'rgba(255, 109, 0, 0.8)',
-                            borderColor: '#FF6D00',
-                            borderWidth: 1
-                        }
+<script>
+    (function() {
+        // ===СКРИПТ_НАЧАЛО===
+        // ---------- ИСХОДНЫЕ ДАННЫЕ ----------
+        const tasks = {
+            A320CEO: {
+                contract: {
+                    main: [
+                        "Апгрейд места (юридические ограничения)",
+                        "Обновление контента через GSM модем",
+                        "Обновление рекламных материалов через GSM",
+                        "Составление плей-листов",
+                        "Ограничение контента по возрасту",
+                        "Опросы (нет модема) – контракт",
+                        "Свежая пресса (нет модема) – контракт",
+                        "«Аэрофлот Бонус» (нет модема) – контракт",
+                        "Информация о погоде в пункте прилёта (после модемов)",
+                        "Добавление модуля Аэрофлот Бонус (после модемов)",
+                        "Опросник (после модемов)",
+                        "Раздел Свежая пресса (после модемов)",
+                        "Добавление Бортового журнала"
+                    ],
+                    techDebt: [
+                        "Бортовое меню: заказ блюд (техдолг)",
+                        "Перемотка медиаконтента (шаг 30 сек) (техдолг)",
+                        "Протоколирование событий (метрики) (техдолг)",
+                        "Анализ логов с борта (требования) (техдолг)",
+                        "Магазин на борту (заказ) для стрима (техдолг)",
+                        "Магазин на борту (заказ) для встройки (техдолг)"
+                    ],
+                    statistics: [
+                        "Отчётность о работоспособности системы",
+                        "Просмотр исторических данных (12 мес.)",
+                        "Выгрузка данных о работоспособности",
+                        "Просмотр статистики использования контента (12 мес.)",
+                        "Выгрузка статистических отчётов",
+                        "Статистика авторизации и просмотра контента",
+                        "Просмотр рекламы (статистика)",
+                        "Статистика эксплуатации компонентов"
+                    ],
+                    flightScript: [
+                        "Открытие полета",
+                        "Все двери закрыты + таймер на 5 мин",
+                        "Шасси коснулись земли + таймер на 1 минуту",
+                        "Дверь открыта + таймер на 10 мин",
+                        "Автоматическое закрытие рейса после завершения полета"
                     ]
                 },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 50,
-                            grid: {
-                                color: 'rgba(0,0,0,0.05)'
-                            },
-                            ticks: {
-                                color: '#666',
-                                font: {
-                                    size: 11
-                                }
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            },
-                            ticks: {
-                                color: '#666',
-                                font: {
-                                    size: 11
-                                }
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                color: '#666',
-                                font: {
-                                    size: 11
-                                }
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: 'rgba(0,0,0,0.9)',
-                            titleColor: '#fff',
-                            bodyColor: '#fff',
-                            borderColor: '#000',
-                            borderWidth: 1
-                        }
-                    }
+                panasonic: {
+                    general: [
+                        "Информация о названии ВС",
+                        "Добавление электронных книг (epub)",
+                        "Обновление по LTE (основное)",
+                        "Заставка и переход в спящий режим",
+                        "Проигрывание PRAM (аудио) и PRVM (видео) сообщений",
+                        "Поиск контента (кит/рус) — доработка"
+                    ],
+                    panasonicFunctions: [
+                        "Воспроизведение трейлеров на странице контента",
+                        "Воспроизведение HD ready video",
+                        "Обновление по LTE (специальное)",
+                        "Видео с защитой DRM (доработка)"
+                    ],
+                    advertising: [
+                        "Перетяжка на главной странице",
+                        "Брендированный канал с контентом",
+                        "Карусель с рекламными баннерами",
+                        "Режиссирование рекламных роликов",
+                        "Проигрывание рекламного ролика после Captive page",
+                        "Фиксированное положение рекламного баннера",
+                        "Рекламный ролик после закрытия дверей",
+                        "Рекламный ролик после посадки"
+                    ]
                 }
-            });
-            
-            // Диаграмма охвата отчетности
-            const reportingCtx = document.getElementById('reportingChart').getContext('2d');
-            new Chart(reportingCtx, {
-                type: 'radar',
-                data: {
-                    labels: ['Автоматический сбор', 'Исторические данные', 'Единый формат', 'Real-time мониторинг', 'Автоматическая выгрузка'],
-                    datasets: [
-                        {
-                            label: 'A320 CEO',
-                            data: [8, 3, 5, 7, 4],
-                            backgroundColor: 'rgba(0, 0, 0, 0.1)',
-                            borderColor: '#000',
-                            pointBackgroundColor: '#000',
-                            pointBorderColor: '#fff',
-                            pointHoverBackgroundColor: '#fff',
-                            pointHoverBorderColor: '#000'
-                        },
-                        {
-                            label: 'A350/B777',
-                            data: [6, 2, 4, 8, 3],
-                            backgroundColor: 'rgba(102, 102, 102, 0.1)',
-                            borderColor: '#666',
-                            pointBackgroundColor: '#666',
-                            pointBorderColor: '#fff',
-                            pointHoverBackgroundColor: '#fff',
-                            pointHoverBorderColor: '#666'
-                        }
+            },
+            A320NEO: {
+                contract: {
+                    main: [
+                        "Опросы (нет модема)",
+                        "Свежая пресса (нет модема)",
+                        "«Аэрофлот Бонус» (нет модема)",
+                        "Бортовой журнал (не используется)",
+                        "Апгрейд места (юридические ограничения)",
+                        "Составление плей-листов",
+                        "Ограничение контента по возрасту",
+                        "Отчётность о работоспособности (ограничена)",
+                        "Получение статуса работоспособности (частично)",
+                        "Передача статистики (ограничена)",
+                        "Информация о погоде в пункте прилёта (после модемов)",
+                        "Добавление модуля Аэрофлот Бонус (после модемов)",
+                        "Опросник (после модемов)",
+                        "Раздел Свежая пресса (после модемов)",
+                        "Добавление Бортового журнала"
+                    ],
+                    techDebt: [
+                        "Бортовое меню: заказ блюд (техдолг)",
+                        "Перемотка медиаконтента (шаг 30 сек) (техдолг)",
+                        "Протоколирование событий (метрики) (техдолг)",
+                        "Анализ логов с борта (требования) (техдолг)",
+                        "Магазин на борту (заказ) для стрима (техдолг)",
+                        "Магазин на борту (заказ) для встройки (техдолг)"
+                    ],
+                    statistics: [
+                        "Просмотр исторических данных (12 мес.)",
+                        "Выгрузка данных о работоспособности",
+                        "Просмотр статистики использования контента (12 мес.)",
+                        "Выгрузка статистических отчётов",
+                        "Статистика авторизации и просмотра контента",
+                        "Просмотр рекламы (статистика)",
+                        "Статистика эксплуатации компонентов"
+                    ],
+                    flightScript: [
+                        "Открытие полета",
+                        "Все двери закрыты + таймер 5 мин",
+                        "Шасси коснулись земли + таймер 1 мин",
+                        "Дверь открыта + таймер 10 мин",
+                        "Автоматическое закрытие рейса"
                     ]
                 },
-                options: {
-                    responsive: true,
-                    scales: {
-                        r: {
-                            beginAtZero: true,
-                            max: 10,
-                            ticks: {
-                                stepSize: 2,
-                                color: '#666',
-                                font: {
-                                    size: 10
-                                }
-                            },
-                            grid: {
-                                color: 'rgba(0,0,0,0.1)'
-                            },
-                            angleLines: {
-                                color: 'rgba(0,0,0,0.1)'
-                            },
-                            pointLabels: {
-                                color: '#666',
-                                font: {
-                                    size: 11
-                                }
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                color: '#666',
-                                font: {
-                                    size: 11
-                                }
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: 'rgba(0,0,0,0.9)',
-                            titleColor: '#fff',
-                            bodyColor: '#fff'
-                        }
-                    }
+                panasonic: {
+                    general: [
+                        "Информация о названии ВС",
+                        "Добавление электронных книг (epub)",
+                        "Отправка текстовых сообщений с CT на монитор",
+                        "Кодирование фильмов в M4",
+                        "Заставка и переход в спящий режим",
+                        "Проигрывание PRAM/PRVM сообщений",
+                        "Поиск контента (кит/рус) — доработка"
+                    ],
+                    panasonicFunctions: [
+                        "Воспроизведение трейлеров",
+                        "Воспроизведение HD ready video",
+                        "Обновление по LTE",
+                        "Видео с защитой DRM (доработка)"
+                    ],
+                    advertising: [
+                        "Перетяжка на главной странице",
+                        "Брендированный канал с контентом",
+                        "Фиксированное положение рекламного баннера",
+                        "Карусель с рекламными баннерами",
+                        "Режиссирование рекламных роликов",
+                        "Проигрывание рекламы после Captive page",
+                        "Рекламный ролик (fs после закрытия дверей)",
+                        "Рекламный ролик (fs после посадки)"
+                    ]
                 }
-            });
-            
-            // Диаграмма общего охвата
-            const coverageCtx = document.getElementById('coverageChart').getContext('2d');
-            new Chart(coverageCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Базовые функции', 'Функции с техдолгом', 'Внешние зависимости', 'Не реализовано'],
-                    datasets: [{
-                        data: [80.5, 7.0, 9.0, 3.5],
-                        backgroundColor: [
-                            'rgba(0, 0, 0, 0.9)',
-                            'rgba(255, 109, 0, 0.7)',
-                            'rgba(198, 40, 40, 0.7)',
-                            'rgba(102, 102, 102, 0.3)'
-                        ],
-                        borderWidth: 0,
-                        cutout: '65%'
-                    }]
+            },
+            B737: {
+                contract: {
+                    main: [
+                        "Опросы (нет модема)",
+                        "Свежая пресса (нет модема)",
+                        "«Аэрофлот Бонус» (нет модема)",
+                        "Бортовой журнал (не используется)",
+                        "Апгрейд места (юридические ограничения)",
+                        "Магазин на борту: заказ товаров (до замены мониторов)",
+                        "Составление плей-листов",
+                        "Ограничение контента по возрасту",
+                        "Получение статуса работоспособности (частично)",
+                        "Передача статистики (ограничена)",
+                        "Информация о погоде в пункте прилёта (после модемов)",
+                        "Добавление модуля Аэрофлот Бонус (после модемов)",
+                        "Опросник (после модемов)",
+                        "Раздел Свежая пресса (после модемов)",
+                        "Добавление Бортового журнала"
+                    ],
+                    techDebt: [
+                        "Бортовое меню: заказ блюд (техдолг)",
+                        "Перемотка медиаконтента (шаг 30 сек) (техдолг)",
+                        "Протоколирование событий (метрики) (техдолг)",
+                        "Анализ логов с борта (требования) (техдолг)",
+                        "Магазин на борту (заказ) для стрима (техдолг)",
+                        "Магазин на борту (заказ) для встройки (техдолг) (после замены мониторов)"
+                    ],
+                    statistics: [
+                        "Просмотр исторических данных (12 мес.)",
+                        "Выгрузка данных о работоспособности",
+                        "Просмотр статистики использования контента (12 мес.)",
+                        "Выгрузка статистических отчётов",
+                        "Статистика авторизации и просмотра контента",
+                        "Просмотр рекламы (статистика)",
+                        "Статистика эксплуатации компонентов"
+                    ],
+                    flightScript: [
+                        "Открытие полета",
+                        "BC Seat Back Monitor: Display Logo, seat number",
+                        "Все двери закрыты + таймер 5 мин",
+                        "BC Seat Back Monitor: Play Safety VPA",
+                        "Шасси коснулись земли + таймер 1 мин",
+                        "BC Seat Back Monitor: Play Thank You VPA",
+                        "Дверь открыта + таймер 10 мин",
+                        "BC Seat Back Monitor: Monitor Backlights off",
+                        "Автоматическое закрытие рейса"
+                    ]
                 },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                color: '#666',
-                                font: {
-                                    size: 11
-                                },
-                                padding: 15
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: 'rgba(0,0,0,0.9)',
-                            titleColor: '#fff',
-                            bodyColor: '#fff',
-                            callbacks: {
-                                label: function(context) {
-                                    return `${context.label}: ${context.parsed}%`;
-                                }
-                            }
-                        }
-                    }
+                panasonic: {
+                    general: [
+                        "Информация о названии ВС",
+                        "Добавление электронных книг (epub)",
+                        "Кодирование фильмов в M4",
+                        "Заставка и переход в спящий режим",
+                        "Проигрывание PRAM/PRVM сообщений",
+                        "Поиск контента (кит/рус)"
+                    ],
+                    panasonicFunctions: [
+                        "Воспроизведение трейлеров",
+                        "Воспроизведение HD ready video",
+                        "Обновление по LTE",
+                        "Видео с защитой DRM"
+                    ],
+                    advertising: [
+                        "Перетяжка на главной странице",
+                        "Брендированный канал с контентом",
+                        "Фиксированное положение рекламного баннера",
+                        "Карусель с рекламными баннерами",
+                        "Режиссирование рекламных роликов",
+                        "Проигрывание рекламы после Captive page",
+                        "Рекламный ролик (fs после закрытия дверей)",
+                        "Рекламный ролик (fs после посадки)"
+                    ]
                 }
+            },
+            A350_B777: {
+                contract: {
+                    main: [
+                        "Свежая пресса (нет модема)",
+                        "«Аэрофлот Бонус» (нет модема)",
+                        "Опросы (нет модема)",
+                        "Информация о полёте (аэропорты, погода, карта)",
+                        "Внешнее видео (с камер)",
+                        "Выбор места (юридические ограничения)",
+                        "Стриминг для пассажиров (аппаратные ограничения)",
+                        "Составление плей-листов",
+                        "Информация о погоде в пункте прилёта (после модемов)",
+                        "Добавление модуля Аэрофлот Бонус (после модемов)",
+                        "Опросник (после модемов)",
+                        "Раздел Свежая пресса (после модемов)",
+                        "Добавление Бортового журнала"
+                    ],
+                    techDebt: [
+                        "Бортовое меню: заказ блюд (техдолг)",
+                        "Перемотка и пропуск рекламы (нет отключения) (техдолг)",
+                        "Перемотка медиаконтента (шаг 30 сек) (техдолг)",
+                        "Поиск контента (только англ., не по языковым дорожкам) (техдолг)",
+                        "Виртуальная клавиатура (только англ.) (техдолг)"
+                    ],
+                    statistics: [
+                        "Просмотр исторических данных (12 мес.)",
+                        "Выгрузка данных о работоспособности",
+                        "Просмотр статистики использования контента (12 мес.)",
+                        "Выгрузка статистических отчётов",
+                        "Статистика авторизации и просмотра контента",
+                        "Просмотр рекламы (статистика)",
+                        "Статистика эксплуатации компонентов"
+                    ],
+                    flightScript: [
+                        "Открытие полета",
+                        "BC Seat Back Monitor: Display Logo, seat number",
+                        "BC VHS: Display Logo, seat number",
+                        "EC Seat Back Monitor: Display Logo, seat number",
+                        "Wall Monitors: Play Welcome Overhead",
+                        "Все двери закрыты + таймер 5 мин",
+                        "BC Seat Back Monitor: Play Safety VPA, Corp Video 1, Display CMI, Corp Video 2, реклама, Camera Message",
+                        "BC VHS: Play VPA, сообщения",
+                        "EC Seat Back Monitor: Play Safety VPA, Corp Video 1, Corp Video 2, CMI, реклама, Camera Message",
+                        "Wall Monitors: Play Safety VPA, Corp Video 1, Corp Video 2, реклама, Show camera",
+                        "Шасси коснулись земли + таймер 1 мин",
+                        "BC Seat Back Monitor: Play Thank You VPA",
+                        "BC VHS: Play VPA",
+                        "EC Seat Back Monitor: Play Thank You VPA",
+                        "Wall Monitors: Play Thank You VPA",
+                        "Дверь открыта + таймер 10 мин",
+                        "BC Seat Back Monitor: Monitor Backlights off",
+                        "BC VHS: Monitor Backlights off",
+                        "EC Seat Back Monitor: Monitor Backlights off",
+                        "Wall Monitors: Monitor Backlights off",
+                        "Автоматическое закрытие рейса"
+                    ]
+                },
+                panasonic: {
+                    general: [
+                        "Информация о названии ВС",
+                        "Добавление электронных книг (epub)",
+                        "Трейлеры (общие)",
+                        "Обновление стиками (реклама/контент) (общее)",
+                        "Заставка и переход в спящий режим",
+                        "Проигрывание PRAM/PRVM сообщений",
+                        "Стриминг на ШФ (для пассажиров) — проработка"
+                    ],
+                    panasonicFunctions: [
+                        "Воспроизведение трейлеров (спец.)",
+                        "Воспроизведение HD ready video",
+                        "Обновление стиками (реклама/контент) (спец.)",
+                        "Видео с защитой DRM (доработка)"
+                    ],
+                    advertising: [
+                        "Перетяжка на главной странице",
+                        "Брендированный канал с контентом",
+                        "Фиксированное положение рекламного баннера",
+                        "Карусель с рекламными баннерами",
+                        "Режиссирование рекламных роликов",
+                        "Проигрывание рекламы после Captive page"
+                    ]
+                }
+            },
+            Tablet: {
+                contract: null,
+                panasonic: {
+                    general: [
+                        "Пресса в PDF",
+                        "Блокировка скриншотов",
+                        "DRM контент",
+                        "Добавление Бортового журнала",
+                        "Добавление электронных книг (epub)",
+                        "Модуль Магазин на борту (заказ)",
+                        "Добавление модуля Меню (заказ)",
+                        "Трейлеры",
+                        "Воспроизведение аудио в фоновом режиме",
+                        "Опросник",
+                        "Изменение дизайна главной страницы",
+                        "Добавление модуля Аэрофлот Бонус",
+                        "Модуль Вызовы",
+                        "Welcome-видео",
+                        "Рейтинг Кинопоиск + награды"
+                    ],
+                    panasonicFunctions: [],
+                    advertising: [
+                        "Брендированный канал с контентом",
+                        "Фиксированное положение рекламного баннера",
+                        "Режиссирование рекламных роликов",
+                        "Добавление рекламных баннеров на главную (карусель)"
+                    ]
+                }
+            }
+        };
+
+        // ---------- ФУНКЦИИ ПОСТРОЕНИЯ DOM ----------
+        function renderAccordion(title, items, iconClass) {
+            if (!items || items.length === 0) items = [];
+            return `
+                <div class="accordion-item active">
+                    <div class="accordion-header">
+                        <div class="accordion-header-left">
+                            <i class="fas ${iconClass}"></i>
+                            <span>${title}</span>
+                            <i class="fas fa-pencil-alt edit-icon"></i>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <i class="fas fa-trash delete-icon"></i>
+                            <i class="fas fa-chevron-right chevron"></i>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="add-task-form">
+                            <input type="text" placeholder="Новая задача...">
+                            <button type="button">Добавить</button>
+                        </div>
+                        <ul class="task-list" data-type="accordion">
+                            ${items.map(i => `<li><i class="fas ${iconClass}"></i> ${i} <span class="task-actions"><i class="fas fa-circle-check mark-hight"></i><i class="fas fa-circle-minus mark-low"></i><i class="fas fa-trash delete-task"></i></span></li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderColumn(data, type) {
+            if (!data) return '<div class="task-block"><div class="column-header">Нет задач</div></div>';
+            const isContract = type === 'contract';
+            const blockClass = isContract ? 'contract' : 'new';
+            const icon = isContract ? 'fa-file-signature' : 'fa-bolt';
+            const defaultTitle = isContract ? 'Обязательства по договору на ПО' : 'Новый функционал';
+
+            let innerHtml = '';
+
+            if (isContract) {
+                // Левая колонка
+                if (data.main && data.main.length) {
+                    innerHtml += `
+                        <div class="add-task-form">
+                            <input type="text" placeholder="Новая задача...">
+                            <button type="button">Добавить</button>
+                        </div>
+                        <ul class="task-list" data-type="main">
+                            ${data.main.map(i => `<li><i class="fas fa-file-signature"></i> ${i} <span class="task-actions"><i class="fas fa-circle-check mark-hight"></i><i class="fas fa-circle-minus mark-low"></i><i class="fas fa-trash delete-task"></i></span></li>`).join('')}
+                        </ul>
+                    `;
+                }
+                if (data.techDebt && data.techDebt.length) {
+                    innerHtml += renderAccordion('Функции с техдолгом', data.techDebt, 'fa-file-signature');
+                }
+                if (data.statistics && data.statistics.length) {
+                    innerHtml += renderAccordion('Статистика', data.statistics, 'fa-file-signature');
+                }
+                if (data.flightScript && data.flightScript.length) {
+                    innerHtml += renderAccordion('flight script', data.flightScript, 'fa-file-signature');
+                }
+            } else {
+                // Правая колонка
+                if (data.general && data.general.length) {
+                    innerHtml += `
+                        <div class="add-task-form">
+                            <input type="text" placeholder="Новая задача...">
+                            <button type="button">Добавить</button>
+                        </div>
+                        <ul class="task-list" data-type="general">
+                            ${data.general.map(i => `<li><i class="fas fa-bolt"></i> ${i} <span class="task-actions"><i class="fas fa-circle-check mark-hight"></i><i class="fas fa-circle-minus mark-low"></i><i class="fas fa-trash delete-task"></i></span></li>`).join('')}
+                        </ul>
+                    `;
+                }
+                if (data.panasonicFunctions && data.panasonicFunctions.length) {
+                    innerHtml += renderAccordion('Функции Panasonic', data.panasonicFunctions, 'fa-bolt');
+                }
+                if (data.advertising && data.advertising.length) {
+                    innerHtml += renderAccordion('Рекламные возможности', data.advertising, 'fa-bolt');
+                }
+            }
+
+            return `
+                <div class="task-block ${blockClass} active">
+                    <div class="column-header">
+                        <div class="column-header-left">
+                            <i class="fas ${icon}"></i>
+                            <h3>${defaultTitle}</h3>
+                            <i class="fas fa-pencil-alt edit-icon"></i>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <i class="fas fa-plus add-section-icon"></i>
+                            <i class="fas fa-chevron-right chevron"></i>
+                        </div>
+                    </div>
+                    <div class="column-content">
+                        ${innerHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderSubgroup(title, data) {
+            return `
+                <div class="subgroup">
+                    <div class="subgroup-header">
+                        <i class="fas fa-chevron-down"></i> ${title}
+                    </div>
+                    <div class="subgroup-content">
+                        <div class="task-columns">
+                            ${renderColumn(data.contract, 'contract')}
+                            ${renderColumn(data.panasonic, 'new')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Сборка всего приложения
+        function buildApp() {
+            return `
+                <!-- Узкий фюзеляж -->
+                <section id="uf" class="aircraft-section">
+                    <div class="section-header"><h2 class="section-title">Узкий фюзеляж (УФ)</h2><span class="section-tag">A320CEO, A320NEO, B737</span></div>
+                    ${renderSubgroup('A320 CEO', { contract: tasks.A320CEO.contract, panasonic: tasks.A320CEO.panasonic })}
+                    ${renderSubgroup('A320 NEO', { contract: tasks.A320NEO.contract, panasonic: tasks.A320NEO.panasonic })}
+                    ${renderSubgroup('B737', { contract: tasks.B737.contract, panasonic: tasks.B737.panasonic })}
+                </section>
+                <!-- Широкий фюзеляж -->
+                <section id="shf" class="aircraft-section">
+                    <div class="section-header"><h2 class="section-title">Широкий фюзеляж (ШФ)</h2><span class="section-tag">A350, B777</span></div>
+                    ${renderSubgroup('A350 / B777', { contract: tasks.A350_B777.contract, panasonic: tasks.A350_B777.panasonic })}
+                </section>
+                <!-- Tablet -->
+                <section id="tablet" class="aircraft-section">
+                    <div class="section-header"><h2 class="section-title">Tablet (планшеты бортпроводников)</h2><span class="section-tag">Отдельное оборудование</span></div>
+                    ${renderSubgroup('Tablet', { contract: tasks.Tablet.contract, panasonic: tasks.Tablet.panasonic })}
+                </section>
+            `;
+        }
+
+        // ---------- РАБОТА С LOCALSTORAGE ----------
+        const STORAGE_KEY = 'ifeRoadmap';
+
+        function saveToLocalStorage() {
+            const subgroupContents = [];
+            document.querySelectorAll('.subgroup-content').forEach(el => {
+                subgroupContents.push(el.innerHTML);
             });
-        });
-        
-        // Навигация
-        document.querySelectorAll('.nav a').forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetSection = document.querySelector(targetId);
-                
-                // Обновляем активный элемент навигации
-                document.querySelectorAll('.nav a').forEach(navItem => {
-                    navItem.classList.remove('active');
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(subgroupContents));
+        }
+
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (!saved) return false;
+            try {
+                const contents = JSON.parse(saved);
+                const targets = document.querySelectorAll('.subgroup-content');
+                if (contents.length !== targets.length) return false;
+                targets.forEach((el, idx) => {
+                    el.innerHTML = contents[idx];
                 });
-                this.classList.add('active');
-                
-                // Прокручиваем к секции
-                if (targetSection) {
-                    window.scrollTo({
-                        top: targetSection.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
-                }
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // ---------- ИНИЦИАЛИЗАЦИЯ SORTABLE ----------
+        let sortableInstances = [];
+
+        function initSortable() {
+            sortableInstances.forEach(s => s.destroy());
+            sortableInstances = [];
+
+            document.querySelectorAll('.task-list').forEach(list => {
+                const sortable = Sortable.create(list, {
+                    group: 'tasks',
+                    animation: 150,
+                    handle: 'li',
+                    draggable: 'li',
+                    onEnd: function() {
+                        saveToLocalStorage();
+                    }
+                });
+                sortableInstances.push(sortable);
             });
-        });
-        
-        // Мобильное меню
-        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
-            const nav = document.querySelector('.nav');
-            if (nav.style.display === 'flex') {
-                nav.style.display = 'none';
+        }
+
+        // ---------- ОБРАБОТЧИКИ ----------
+        function toggleHight(li) {
+            let label = li.querySelector('.hight-label');
+            if (label) {
+                label.remove();
             } else {
-                nav.style.display = 'flex';
-                nav.style.flexDirection = 'column';
-                nav.style.position = 'absolute';
-                nav.style.top = '100%';
-                nav.style.left = '0';
-                nav.style.right = '0';
-                nav.style.background = 'var(--color-background)';
-                nav.style.padding = '20px';
-                nav.style.borderBottom = '1px solid var(--color-border)';
+                label = document.createElement('span');
+                label.className = 'hight-label';
+                label.textContent = 'hight';
+                const actions = li.querySelector('.task-actions');
+                if (actions) {
+                    li.insertBefore(label, actions);
+                } else {
+                    li.appendChild(label);
+                }
+            }
+            saveToLocalStorage();
+        }
+
+        function toggleLow(li) {
+            let label = li.querySelector('.low-label');
+            if (label) {
+                label.remove();
+            } else {
+                label = document.createElement('span');
+                label.className = 'low-label';
+                label.textContent = 'low';
+                const actions = li.querySelector('.task-actions');
+                if (actions) {
+                    li.insertBefore(label, actions);
+                } else {
+                    li.appendChild(label);
+                }
+            }
+            saveToLocalStorage();
+        }
+
+        function handleDelete(li) {
+            li.remove();
+            saveToLocalStorage();
+        }
+
+        function handleAdd(input, button, list) {
+            const text = input.value.trim();
+            if (!text) return;
+            const taskBlock = list.closest('.task-block');
+            const iconClass = taskBlock.classList.contains('contract') ? 'fa-file-signature' : 'fa-bolt';
+            const newLi = document.createElement('li');
+            newLi.innerHTML = `<i class="fas ${iconClass}"></i> ${text} <span class="task-actions"><i class="fas fa-circle-check mark-hight"></i><i class="fas fa-circle-minus mark-low"></i><i class="fas fa-trash delete-task"></i></span>`;
+            list.appendChild(newLi);
+            input.value = '';
+            saveToLocalStorage();
+        }
+
+        // Редактирование заголовка (колонки или аккордеона)
+        function handleEditTitle(target) {
+            // Определяем, что редактируем: заголовок колонки или аккордеона
+            const columnHeader = target.closest('.column-header');
+            if (columnHeader) {
+                const titleSpan = columnHeader.querySelector('h3');
+                if (!titleSpan) return;
+                const oldTitle = titleSpan.textContent;
+                const newTitle = prompt('Введите новое название раздела:', oldTitle);
+                if (newTitle && newTitle.trim() !== '') {
+                    titleSpan.textContent = newTitle.trim();
+                    saveToLocalStorage();
+                }
+                return;
+            }
+
+            const accordionHeader = target.closest('.accordion-header');
+            if (accordionHeader) {
+                const titleSpan = accordionHeader.querySelector('.accordion-header-left span');
+                if (!titleSpan) return;
+                const oldTitle = titleSpan.textContent;
+                const newTitle = prompt('Введите новое название раздела:', oldTitle);
+                if (newTitle && newTitle.trim() !== '') {
+                    titleSpan.textContent = newTitle.trim();
+                    saveToLocalStorage();
+                }
+                return;
+            }
+        }
+
+        // Удаление аккордеона
+        function handleDeleteAccordion(accordionItem) {
+            accordionItem.remove();
+            saveToLocalStorage();
+            // Пересоздаём Sortable, т.к. удалились списки
+            initSortable();
+        }
+
+        // Добавление нового раздела (аккордеона) в колонку
+        function handleAddSection(columnContent, iconClass) {
+            const newAccordion = document.createElement('div');
+            newAccordion.className = 'accordion-item active';
+            newAccordion.innerHTML = `
+                <div class="accordion-header">
+                    <div class="accordion-header-left">
+                        <i class="fas ${iconClass}"></i>
+                        <span>Новый раздел</span>
+                        <i class="fas fa-pencil-alt edit-icon"></i>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <i class="fas fa-trash delete-icon"></i>
+                        <i class="fas fa-chevron-right chevron"></i>
+                    </div>
+                </div>
+                <div class="accordion-content">
+                    <div class="add-task-form">
+                        <input type="text" placeholder="Новая задача...">
+                        <button type="button">Добавить</button>
+                    </div>
+                    <ul class="task-list" data-type="accordion">
+                        <!-- пустой список -->
+                    </ul>
+                </div>
+            `;
+            columnContent.appendChild(newAccordion);
+            saveToLocalStorage();
+            // Обновляем Sortable, чтобы новый список стал перетаскиваемым
+            initSortable();
+        }
+
+        // Глобальный обработчик кликов
+        document.addEventListener('click', function(e) {
+            // Сворачивание подгрупп
+            const subgroupHeader = e.target.closest('.subgroup-header');
+            if (subgroupHeader) {
+                e.preventDefault();
+                const subgroup = subgroupHeader.closest('.subgroup');
+                if (subgroup) subgroup.classList.toggle('collapsed');
+                return;
+            }
+
+            // Сворачивание колонок
+            const columnHeader = e.target.closest('.column-header');
+            if (columnHeader && !e.target.closest('.edit-icon') && !e.target.closest('.add-section-icon')) {
+                e.preventDefault();
+                const taskBlock = columnHeader.closest('.task-block');
+                if (taskBlock) taskBlock.classList.toggle('active');
+                return;
+            }
+
+            // Сворачивание аккордеонов
+            const accordionHeader = e.target.closest('.accordion-header');
+            if (accordionHeader && !e.target.closest('.edit-icon') && !e.target.closest('.delete-icon')) {
+                e.preventDefault();
+                const accordionItem = accordionHeader.closest('.accordion-item');
+                if (accordionItem) accordionItem.classList.toggle('active');
+                return;
+            }
+
+            // Редактирование заголовка (карандаш)
+            if (e.target.closest('.edit-icon')) {
+                e.preventDefault();
+                handleEditTitle(e.target);
+                return;
+            }
+
+            // Удаление аккордеона (корзина в заголовке аккордеона)
+            if (e.target.closest('.delete-icon')) {
+                e.preventDefault();
+                const accordionItem = e.target.closest('.accordion-item');
+                if (accordionItem) handleDeleteAccordion(accordionItem);
+                return;
+            }
+
+            // Добавление нового раздела (плюс в заголовке колонки)
+            if (e.target.closest('.add-section-icon')) {
+                e.preventDefault();
+                const taskBlock = e.target.closest('.task-block');
+                if (!taskBlock) return;
+                const columnContent = taskBlock.querySelector('.column-content');
+                const iconClass = taskBlock.classList.contains('contract') ? 'fa-file-signature' : 'fa-bolt';
+                handleAddSection(columnContent, iconClass);
+                return;
+            }
+
+            // Удаление задачи
+            const deleteBtn = e.target.closest('.delete-task');
+            if (deleteBtn) {
+                e.preventDefault();
+                const li = deleteBtn.closest('li');
+                if (li) handleDelete(li);
+                return;
+            }
+
+            // Переключение метки hight
+            const markHight = e.target.closest('.mark-hight');
+            if (markHight) {
+                e.preventDefault();
+                const li = markHight.closest('li');
+                if (li) toggleHight(li);
+                return;
+            }
+
+            // Переключение метки low
+            const markLow = e.target.closest('.mark-low');
+            if (markLow) {
+                e.preventDefault();
+                const li = markLow.closest('li');
+                if (li) toggleLow(li);
+                return;
+            }
+
+            // Добавление задачи
+            const addBtn = e.target.closest('.add-task-form button');
+            if (addBtn) {
+                e.preventDefault();
+                const form = addBtn.closest('.add-task-form');
+                const input = form.querySelector('input');
+                const list = form.nextElementSibling;
+                if (list && list.classList.contains('task-list')) {
+                    handleAdd(input, addBtn, list);
+                }
+                return;
             }
         });
-        
-        // Функции кнопок
-        function downloadProductPortrait() {
-            alert('Портрет продукта будет загружен в формате PDF. В реальной реализации здесь был бы запрос к серверу.');
-        }
-        
-        function requestDetailedReport() {
-            alert('Запрос на детальный отчёт отправлен. С вами свяжется продуктовый менеджер.');
-        }
-        
-        // Подсветка активного раздела при скролле
-        window.addEventListener('scroll', function() {
-            const sections = document.querySelectorAll('.section');
-            const navItems = document.querySelectorAll('.nav a');
-            
-            let currentSectionId = '';
-            
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop - 100;
-                const sectionHeight = section.clientHeight;
-                
-                if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
-                    currentSectionId = '#' + section.id;
-                }
+
+        // ---------- НАВИГАЦИЯ ----------
+        function initNav() {
+            document.querySelectorAll('.nav a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (this.id === 'resetBtn' || this.id === 'saveBtn') return;
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const target = document.querySelector(targetId);
+                    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    document.querySelectorAll('.nav a').forEach(a => a.classList.remove('active'));
+                    this.classList.add('active');
+                });
             });
-            
-            navItems.forEach(item => {
-                item.classList.remove('active');
-                if (item.getAttribute('href') === currentSectionId) {
-                    item.classList.add('active');
-                }
-            });
+        }
+
+        // ---------- СБРОС ----------
+        document.getElementById('resetBtn').addEventListener('click', function() {
+            localStorage.removeItem(STORAGE_KEY);
+            const app = document.getElementById('app');
+            app.innerHTML = buildApp();
+            afterLoad();
         });
-        
-        // Адаптивное меню
-        window.addEventListener('resize', function() {
-            const nav = document.querySelector('.nav');
-            if (window.innerWidth > 768) {
-                nav.style.display = 'flex';
-                nav.style.flexDirection = 'row';
-                nav.style.position = 'static';
-                nav.style.background = 'transparent';
-                nav.style.padding = '0';
-                nav.style.borderBottom = 'none';
-            } else {
-                nav.style.display = 'none';
+
+        // ---------- СОХРАНЕНИЕ В HTML ----------
+        function saveAsHTML() {
+            const html = document.documentElement.outerHTML;
+            const startMarker = '// ===СКРИПТ_НАЧАЛО===';
+            const endMarker = '// ===СКРИПТ_КОНЕЦ===';
+
+            const startIdx = html.indexOf(startMarker);
+            const endIdx = html.indexOf(endMarker, startIdx);
+
+            if (startIdx === -1 || endIdx === -1) {
+                alert('Не удалось найти скрипт для модификации.');
+                return;
             }
-        });
-    </script>
+
+            const beforeScript = html.substring(0, startIdx);
+            const afterScript = html.substring(endIdx + endMarker.length);
+            const currentScriptContent = html.substring(startIdx + startMarker.length, endIdx);
+
+            const newScriptContent = currentScriptContent.replace(
+                /(const app = document\.getElementById\('app'\);)([\s\S]*?)(afterLoad\(\);)/,
+                `$1
+        // Если в #app уже есть дети (сохранённая версия), не перестраиваем
+        if (app.children.length === 0) {
+            app.innerHTML = buildApp();
+            loadFromLocalStorage();
+        }
+        $3`
+            );
+
+            const newHtml = beforeScript + startMarker + newScriptContent + endMarker + afterScript;
+            const blob = new Blob([newHtml], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'ife_roadmap_edited.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        document.getElementById('saveBtn').addEventListener('click', saveAsHTML);
+
+        function afterLoad() {
+            initSortable();
+            initNav();
+        }
+
+        // ---------- ЗАПУСК ----------
+        const app = document.getElementById('app');
+        app.innerHTML = buildApp();
+
+        if (!loadFromLocalStorage()) {
+            // если нет сохранения, оставляем как есть
+        }
+        afterLoad();
+
+        // ===СКРИПТ_КОНЕЦ===
+    })();
+</script>
 </body>
 </html>
